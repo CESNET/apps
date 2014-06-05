@@ -1,8 +1,9 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Document was shared" => "O documento foi compartido",
-"User %s shared quick document %s with you." => "O usuario %s fixo unha compartición rápida do documento %s con vostede",
+"User %s shared quick document %s with you." => "O usuario %s fixo unha compartición rápida con vostede do documento %s.",
 "My pad" => "O meu bloque",
-"Settings" => "Configuración",
+"Settings" => "Axustes",
 "Pad Title" => "Título do bloque",
 "Open" => "Abrir",
 "Share with" => "Compartir con",
@@ -11,3 +12,4 @@
 "Username" => "Nome de usuario",
 "Save" => "Gardar"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";
