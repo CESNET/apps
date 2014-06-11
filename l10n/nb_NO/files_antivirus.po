@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-06-05 00:48-0400\n"
-"PO-Revision-Date: 2014-06-04 06:12+0000\n"
+"POT-Creation-Date: 2014-06-11 00:48-0400\n"
+"PO-Revision-Date: 2014-06-10 07:50+0000\n"
 "Last-Translator: vidaren <news@vidartysse.net>\n"
 "Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/projects/p/owncloud/language/nb_NO/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: js/settings.js:3
+msgid "Clean"
+msgstr "Ren"
+
+#: js/settings.js:4
+msgid "Infected"
+msgstr "Infisert"
+
+#: js/settings.js:5
+msgid "Unchecked"
+msgstr "Ikke sjekket"
+
+#: js/settings.js:8
+msgid "Scanner exit status"
+msgstr "Status fra skanning"
+
+#: js/settings.js:9
+msgid "Scanner output"
+msgstr "Utdata fra skanning"
+
+#: lib/notification.php:29
+msgid "Malware detected"
+msgstr "Skadevare oppdaget"
+
+#: lib/scanner.php:86
+#, php-format
+msgid "Virus detected! Can't upload the file %s"
+msgstr "Virus oppdaget! Kan ikke laste opp filen %s"
 
 #: templates/notification.php:1
 msgid "Greetings {user},"
@@ -38,87 +67,123 @@ msgstr "Denne eposten er en varsel fra {host}. Vennligst ikke svar på denne."
 msgid "File uploaded: {file}"
 msgstr "Fil lastet opp: {file}"
 
-#: templates/settings.php:3
+#: templates/settings.php:4
 msgid "Antivirus Configuration"
 msgstr "Antivirus-innstillinger"
 
-#: templates/settings.php:4
+#: templates/settings.php:5
 msgid "Mode"
 msgstr "Modus"
 
-#: templates/settings.php:5
+#: templates/settings.php:6
 msgid "Executable"
 msgstr "Eksekvering"
 
-#: templates/settings.php:5
+#: templates/settings.php:6
 msgid "Daemon"
 msgstr "Bakgrunnsprosess"
 
-#: templates/settings.php:5
+#: templates/settings.php:6
 msgid "Daemon (Socket)"
 msgstr "Bakgrunnsprosess (Socket)"
 
-#: templates/settings.php:7
+#: templates/settings.php:8
 msgid "Socket"
 msgstr "Socket"
 
-#: templates/settings.php:7
+#: templates/settings.php:8
 msgid "Clamav Socket."
 msgstr "Clamav Socket."
 
-#: templates/settings.php:7 templates/settings.php:8 templates/settings.php:9
-#: templates/settings.php:10
+#: templates/settings.php:8 templates/settings.php:9 templates/settings.php:10
+#: templates/settings.php:11
 msgid "Not required in Executable Mode."
 msgstr "Ikke påkrevd i Eksekveringsmodus."
 
-#: templates/settings.php:8
+#: templates/settings.php:9
 msgid "Host"
 msgstr "Tjener"
 
-#: templates/settings.php:8
+#: templates/settings.php:9
 msgid "Address of Antivirus Host."
 msgstr "Adressen til Antivirus-tjener."
 
-#: templates/settings.php:9
+#: templates/settings.php:10
 msgid "Port"
 msgstr "Port"
 
-#: templates/settings.php:9
+#: templates/settings.php:10
 msgid "Port number of Antivirus Host."
 msgstr "Portnummer til Antivirus-tjener."
 
-#: templates/settings.php:10
+#: templates/settings.php:11
 msgid "Stream Length"
 msgstr "Strømmelengde"
 
-#: templates/settings.php:10
+#: templates/settings.php:11
 msgid "ClamAV StreamMaxLength value in bytes."
 msgstr "ClamAV StreamMaxLength verdi i bytes."
 
-#: templates/settings.php:11
+#: templates/settings.php:12
 msgid "Path to clamscan"
 msgstr "Sti til clamscan"
 
-#: templates/settings.php:11
+#: templates/settings.php:12
 msgid "Path to clamscan executable."
 msgstr "Sti til clamscan eksekveringsfil."
 
-#: templates/settings.php:11
+#: templates/settings.php:12
 msgid "Not required in Daemon Mode."
 msgstr "Ikke påkrevd i Bakgrunnsprosess-modus."
 
-#: templates/settings.php:12
+#: templates/settings.php:13
 msgid "Action for infected files found while scanning"
 msgstr "Handling for infiserte filer funnet under skanning"
 
-#: templates/settings.php:13
+#: templates/settings.php:14
 msgid "Only log"
 msgstr "Bare logg"
 
-#: templates/settings.php:13
+#: templates/settings.php:14
 msgid "Delete file"
 msgstr "Slett fil"
 
-#: templates/settings.php:16
+#: templates/settings.php:17
 msgid "Save"
 msgstr "Lagre"
+
+#: templates/settings.php:21
+msgid "Advanced"
+msgstr "Avansert"
+
+#: templates/settings.php:23
+msgid "Rules"
+msgstr "Regler"
+
+#: templates/settings.php:24
+msgid "Clear All"
+msgstr "Fjern alle"
+
+#: templates/settings.php:24
+msgid "Reset to defaults"
+msgstr "Still tilbake til standard"
+
+#: templates/settings.php:29
+msgid "Match by"
+msgstr "Søk på"
+
+#: templates/settings.php:30
+msgid "Scanner exit status or signature to search"
+msgstr "Status fra skanning eller signatur for søk"
+
+#: templates/settings.php:31
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: templates/settings.php:32
+msgid "Mark as"
+msgstr "Merk som"
+
+#: templates/settings.php:39
+msgid "Add a rule"
+msgstr "Legg til regel"
