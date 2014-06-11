@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	$('#passwordform').remove();
 	$('#displaynameform').remove();
+	$('#lostpassword').remove();
 	$('#cpassworderror').hide();
 	$('#cpasswordchanged').hide();
 	$('#user_name_login').css({"width":"17em", "background-color":"rgb(220, 220, 220)"});

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<info>
+	<id>mail_notifications</id>
+	<name>E-mail notifications</name>
+	<description>Sending custom e-mail notifications of user creation and some other actions.</description>
+	<licence>AGPL</licence>
+	<author>Miroslav Bauer @ CESNET</author>
+	<require>6</require>
+</info>

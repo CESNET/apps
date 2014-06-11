@@ -1,10 +1,9 @@
 <?php
-
 /**
- * ownCloud - user_saml
+ * ownCloud - mail_notifications
  *
- * @author Sixto Martin <smartin@yaco.es>
- * @copyright 2012 Yaco Sistemas // CONFIA
+ * @author Miroslav Bauer <bauer@cesnet.cz>
+ * @copyright 2014 CESNET
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -20,14 +19,18 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+namespace OCA\Mail_Notifications;
+/**
+ * This class contains all implemented action hooks.
+ */
+class Hooks {
 
-	OCP\App::checkAppEnabled('user_saml');
+	static public function post_createUser($parameters) {
+                $uid = $parameters['uid'];
+		Notifier::notifyUserCreation($uid);
+        }
 
-	$sspPath = OCP\Config::getAppValue('user_saml', 'saml_ssp_path', '');
-	$spSource = OCP\Config::getAppValue('user_saml', 'saml_sp_source', '');
-
-	if (!empty($sspPath) && !empty($spSource)) {
-		include_once $sspPath."/lib/_autoload.php";
-		$auth = new SimpleSAML_Auth_Simple($spSource);
-		$auth->requireAuth();
-	}
+        static public function post_setPassword($parameters) {
+		Notifier::notifyPasswordChange();
+        }
+}

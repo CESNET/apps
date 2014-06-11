@@ -1,10 +1,20 @@
 CHANGELOG
 =========
 
-Version 0.5 (by Miroslav Bauer & Jakub Peisar @ CESNET)
+Version 1.1 (Tested with ownCloud 6.0.1) (CESNET version)
+---------------------------------------------------------
 
-* Fixed broken user creation and logout on OC6 (Tested with OwnCloud 6.0.1)
-* Added form for setting password for sync clients to personal settings
+* Identity mapping (multiple saml identities mapped to single OC account)
+
+
+Version 1.0 (Tested with ownCloud 6.0.1) (CESNET version)
+---------------------------------------------------------
+
+* Fixed user creation & logout for OC 6
+* Added possibility to set password for clients
+* Added access filtering by LoA
+* Added access filtering to employees only, for specific IdP's
+* Code refactoring
 
 
 Version 0.4 (Tested with OwnCloud 5.0.8)

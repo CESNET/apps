@@ -11,7 +11,7 @@
 <form id="clientpasswordform" class="formLayout" action="#" method="post">
 <fieldset class="personalblock">
 	<strong><?php p($l->t('Password'));?></strong>
-	<em><?php p($l->t('Set password for your sync app here'));?></em>
+	&ndash; <em><?php p($l->t('Set password for your sync app here'));?></em>
 	<br></br>
 	<input original-title="" id="client_pwd1" name="password" placeholder="<?php p($l->t('Password'));?>" type="password">
 	<input original-title="" id="client_pwd2" name="confirm_password" placeholder="<?php p($l->t('Repeat password'));?>" type="password">

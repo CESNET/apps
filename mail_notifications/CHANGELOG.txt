@@ -1,0 +1,8 @@
+CHANGELOG
+=========
+
+Version 0.1
+-----------
+
+* Send email about user creation
+* Send email about password change

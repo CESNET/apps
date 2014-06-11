@@ -33,8 +33,6 @@ STEPS
 EXTRA INFO
 ==========
 
-* If you wish to use synchronization client app, go to personal settings page and set your password for it.
-
 * If you enable the "Autocreate user after saml login" option, then if an user does not exist, will be created. If this option is disabled and the user does not existed then the user will be not allowed to log in ownCloud.
 
 * If you enable the "Update user data" option, when an existed user enter, then his email and groups will be updated.

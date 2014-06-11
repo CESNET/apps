@@ -5,6 +5,9 @@
  * @author Sixto Martin <smartin@yaco.es>
  * @copyright 2012 Yaco Sistemas // CONFIA
  *
+ * @author Miroslav Bauer <bauer@cesnet.cz>
+ * @copyright 2014 CESNET
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
@@ -19,151 +22,63 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+namespace OCA\User_Saml;
 /**
- * This class contains all hooks.
+ * This class contains all implemented user backend hooks.
  */
-class OC_USER_SAML_Hooks {
+class Hooks {
 
 	static public function post_login($parameters) {
-		$userid = $parameters['uid'];
-		$samlBackend = new OC_USER_SAML();
+		$us = new \OC_USER_SAML();
 
-		if ($samlBackend->auth->isAuthenticated()) {
-			$attributes = $samlBackend->auth->getAttributes();
+		if (!$us->auth->isAuthenticated()) { return false; }
 
-			$usernameFound = false;
-			foreach($samlBackend->usernameMapping as $usernameMapping) {
-				if (array_key_exists($usernameMapping, $attributes) && !empty($attributes[$usernameMapping][0])) {
-					$usernameFound = true;
-					$uid = $attributes[$usernameMapping][0];
-					OC_Log::write('saml','Authenticated user '.$uid,OC_Log::DEBUG);
-					break;
+		$attrs = $us->auth->getAttributes();
+		$uid = Util::getAttr($us->usernameMapping, $attrs);
+
+		if ($uid !== '' && $uid === $parameters['uid']) {
+			if (\OCP\User::userExists($uid)) {
+				if ($us->updateUserData) {
+					Util::updateUserData($uid, $us, $attrs);
 				}
+			} else {
+				\OCP\Util::writeLog('saml','User '.$uid
+					.' does not exist!', \OCP\Util::ERROR);
+				return false;
 			}
-
-			if ($usernameFound && $uid == $userid) {
-				if ($samlBackend->updateUserData) {
-					$attrs = get_user_attributes($uid, $samlBackend);
-					update_user_data($uid, $attrs['email'], $attrs['groups'],
-						$attrs['protected_groups'], $attrs['display_name']);
-				}
-				return true;
+			if (!\OC_User::getDisplayName($uid)) {
+				\OCP\Util::writeLog('saml','User '.$uid
+					.' is missing displayName.', \OCP\Util::WARN);
 			}
+			return true;
 		}
-		return false;
 	}
 
 	static public function post_createUser($parameters) {
 		$uid = $parameters['uid'];
-		$samlBackend = new OC_USER_SAML();
-		if (!$samlBackend->updateUserData) {
-			// Ensure that user data will be filled atleast once
-			$attrs = get_user_attributes($uid, $samlBackend);
-			update_user_data($uid, $attrs['email'], $attrs['groups'],
-				$attrs['protected_groups'], $attrs['display_name'], true);
+		$us = new \OC_USER_SAML();
+		if ($us->auth->isAuthenticated()) {
+			$attrs = $us->auth->getAttributes();
+			if (!$us->updateUserData) {
+				// Ensure that user data will be filled atleast once
+				Util::updateUserData($uid, $us, $attrs);
+			}
 		}
+		\OCP\Util::writeLog('saml','User '.$uid, \OCP\Util::INFO);
+		if (\OCP\App::isEnabled('mail_notifications')) {
+			require_once __DIR__ . '/../../mail_notifications/appinfo/app.php';
+			\OCA\Mail_Notifications\Hooks::post_createUser($parameters);
+		}
+	}
+
+	static public function post_deleteUser($parameters) {
+		$uid = $parameters['uid'];
+//		IdentityMapper::deleteMappings($uid);
 	}
 
 	static public function logout($parameters) {
-		$samlBackend = new OC_USER_SAML();
-		if ($samlBackend->auth->isAuthenticated()) {
-			OC_Log::write('saml', 'Executing SAML logout', OC_Log::DEBUG);
-			unset($_COOKIE["SimpleSAMLAuthToken"]);
-			setcookie('SimpleSAMLAuthToken', '', time()-3600, \OC::$WEBROOT);
-			setcookie('SimpleSAMLAuthToken', '', time()-3600, \OC::$WEBROOT . '/');
-			$samlBackend->auth->logout();
-		}
-		return true;
-	}
-}
-
-function get_user_attributes($uid, $samlBackend) {
-	$attributes = $samlBackend->auth->getAttributes();
-	$result['email'] = '';
-	foreach ($samlBackend->mailMapping as $mailMapping) {
-		if (array_key_exists($mailMapping, $attributes) && !empty($attributes[$mailMapping][0])) {
-			$result['email'] = $attributes[$mailMapping][0];
-			break;
-		}
-	}
-
-	$result['display_name'] = '';
-	foreach ($samlBackend->displayNameMapping as $displayNameMapping) {
-		if (array_key_exists($displayNameMapping, $attributes) && !empty($attributes[$displayNameMapping][0])) {
-			$result['display_name'] = $attributes[$displayNameMapping][0];
-			break;
-		}
-	}
-
-	$result['groups'] = array();
-	foreach ($samlBackend->groupMapping as $groupMapping) {
-		if (array_key_exists($groupMapping, $attributes) && !empty($attributes[$groupMapping])) {
-			$result['groups'] = array_merge($result['groups'], $attributes[$groupMapping]);
-		}
-	}
-	if (empty($result['groups']) && !empty($samlBackend->defaultGroup)) {
-		$result['groups'] = array($samlBackend->defaultGroup);
-		OCP\Util::writeLog('saml','Using default group "'.$samlBackend->defaultGroup.'" for the user: '.$uid, OCP\Util::DEBUG);
-	}
-	$result['protected_groups'] = $samlBackend->protectedGroups;
-	return $result;	
-}
-
-
-function update_user_data($uid, $email=null, $groups=null, $protectedGroups='', $displayName=null, $just_created=false) {
-	OC_Util::setupFS($uid);
-	OCP\Util::writeLog('saml','Updating data of the user: '.$uid, OCP\Util::DEBUG);
-	if(isset($email)) {
-		update_mail($uid, $email);
-	}
-	if (isset($groups)) {
-		update_groups($uid, $groups, $protectedGroups, $just_created);
-	}
-	if (isset($displayName)) {
-		update_display_name($uid, $displayName);
-	}
-}	
-
-
-function update_mail($uid, $email) {
-	if ($email != OC_Preferences::getValue($uid, 'settings', 'email', '')) {
-		OC_Preferences::setValue($uid, 'settings', 'email', $email);
-		OC_Log::write('saml','Set email "'.$email.'" for the user: '.$uid, OC_Log::DEBUG);
-	}
-}
-
-
-function update_groups($uid, $groups, $protectedGroups=array(), $just_created=false) {
-
-	if(!$just_created) {
-		$old_groups = OC_Group::getUserGroups($uid);
-		foreach($old_groups as $group) {
-			if(!in_array($group, $protectedGroups) && !in_array($group, $groups)) {
-				OC_Group::removeFromGroup($uid,$group);
-				OC_Log::write('saml','Removed "'.$uid.'" from the group "'.$group.'"', OC_Log::DEBUG);
-			}
-		}
-	}
-
-	foreach($groups as $group) {
-		if (preg_match( '/[^a-zA-Z0-9 _\.@\-]/', $group)) {
-			OC_Log::write('saml','Invalid group "'.$group.'", allowed chars "a-zA-Z0-9" and "_.@-" ',OC_Log::DEBUG);
-		}
-		else {
-			if (!OC_Group::inGroup($uid, $group)) {
-				if (!OC_Group::groupExists($group)) {
-					OC_Group::createGroup($group);
-					OC_Log::write('saml','New group created: '.$group, OC_Log::DEBUG);
-				}
-				OC_Group::addToGroup($uid, $group);
-				OC_Log::write('saml','Added "'.$uid.'" to the group "'.$group.'"', OC_Log::DEBUG);
-			}
-		}
-	}
-}
-
-
-function update_display_name($uid, $displayName) {
-	OC_User::setDisplayName($uid, $displayName);
+                Util::destroySamlSession(new \OC_USER_SAML(),
+			\OCP\Util::linkToAbsolute('','index.php',array('logout'=>'true')));
+                return true;
+        }
 }
